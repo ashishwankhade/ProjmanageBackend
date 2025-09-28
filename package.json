@@ -1,0 +1,19 @@
+{
+  "name": "projectmanagement",
+  "version": "1.0.0",
+  "description": "a project to learn backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "backend",
+    "API"
+  ],
+  "author": "ashish wankhade",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}
