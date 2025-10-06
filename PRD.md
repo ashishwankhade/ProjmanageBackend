@@ -78,6 +78,7 @@ Project Camp Backend is a RESTful API service designed to support collaborative 
 
 **Authentication Routes** (`/api/v1/auth/`)
 
+
 - `POST /register` - User registration
 - `POST /login` - User authentication
 - `POST /logout` - User logout (secured)

@@ -8,6 +8,8 @@ import {
   forgotPasswordMailgenContent,
 } from "../utils/mail.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -182,11 +184,13 @@ const verifyEmail = asyncHandler(async (req, res) => {
   user.isEmailVerified = true;
   await user.save({ validateBeforeSave: false });
   return res.status(200).json(
-    200,
-    {
-      isEmailVerified: true,
-    },
-    "Emial is verified",
+    new ApiResponse(
+      200,
+      {
+        isEmailVerified: true,
+      },
+      "Emial is verified",
+    ),
   );
 });
 
@@ -223,7 +227,8 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-  const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken;
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Unauthorized access");
   }
@@ -270,7 +275,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const forgotPasswowrdRequest = asyncHandler(async (req, res) => {
-  const { emial } = req.body;
+  const { email } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) {
@@ -331,7 +336,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   const user = await User.findById(req.user?._id);
-  const isPasswordValid = await user.isPasswordValid(oldPassword);
+  const isPasswordValid = await user.isPasswordCorrect(oldPassword);
   if (!isPasswordValid) {
     throw new ApiError(400, "invalid Old password");
   }
@@ -353,5 +358,5 @@ export {
   refreshAccessToken,
   forgotPasswowrdRequest,
   resetForgotPassword,
-  changeCurrentPassword
+  changeCurrentPassword,
 };
